@@ -18,10 +18,10 @@ import pickle
 import matplotlib.pyplot as plt
 
 # Định nghĩa thư mục chứa tập dữ liệu hình ảnh
-THU_MUC = r"D:/KLTN/data_cam_xuc100"
+THU_MUC = r"./data_cam_xuc"
 LOAI = ["binh_thuong", "buon", "cuoi", "ngac_nhien", "so_hai", "tuc_gian"]
 
-# Hàm load dữ liệu chung cho CNN và MLP
+# Hàm load dữ liệu chung cho CNN và MLP(NN)
 def load_data(data_path, img_size=(48, 48), is_mlp=False):
     images, labels = [], []
     supported_formats = ("*.jpg", "*.png", "*.jpeg")
@@ -42,7 +42,7 @@ def load_data(data_path, img_size=(48, 48), is_mlp=False):
     
     return np.array(images), np.array(labels)
 
-# Load dữ liệu cho cả CNN và MLP
+# Load dữ liệu cho cả CNN và MLP(NN)
 du_lieu, nhan = load_data(THU_MUC, is_mlp=False)
 du_lieu = du_lieu.reshape(len(du_lieu), 48, 48, 1)  # Đổi hình dạng cho CNN
 
@@ -84,7 +84,7 @@ cnn_history = cnn_model.fit(datagen.flow(tap_huan_luyen_X, tap_huan_luyen_Y, bat
 # ---- Huấn luyện mô hình MLP ----
 X, y = load_data(THU_MUC, is_mlp=True)
 
-# Chuẩn hóa dữ liệu cho MLP
+# Chuẩn hóa dữ liệu cho MLP(NN)
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
@@ -126,7 +126,7 @@ print("Báo cáo phân loại cho mô hình CNN:")
 print(classification_report(y_true_cnn, cnn_pred_classes, target_names=LOAI))
 
 
-# Huấn luyện mô hình MLP (từng epoch một)
+# Huấn luyện mô hình MLP(NN) (từng epoch một)
 for epoch in range(1, 51):  # Loop for each epoch
     mlp.partial_fit(X_train, y_train, classes=np.unique(y_encoded))  # Manual training step
     
@@ -155,8 +155,8 @@ for epoch in range(1, 51):  # Loop for each epoch
 
 print("Báo cáo phân loại cuối cùng cho tập huấn luyện:")
 print(classification_report(y_train, y_train_pred, target_names=LOAI))
-# In ra báo cáo phân loại cho MLP
-print("Báo cáo phân loại cho mô hình MLP:")
+# In ra báo cáo phân loại cho MLP(NN)
+print("Báo cáo phân loại cho mô hình MLP(NN):")
 print(classification_report(y_test, y_pred, target_names=LOAI))
 
 # Load dữ liệu cho RNN
@@ -217,15 +217,15 @@ print("\nSo sánh mô hình trên tập huấn luyện và kiểm tra:")
 print(f"- Độ chính xác trên tập huấn luyện: {train_accuracy * 100:.2f}%")
 print(f"- Độ chính xác trên tập kiểm tra: {test_accuracy * 100:.2f}%")
 
-# Đồ thị Accuracy chung cho CNN, MLP và RNN
+# Đồ thị Accuracy chung cho CNN, MLP(NN) và RNN
 plt.figure(figsize=(10, 6))
 
-# Đào tạo CNN, MLP và RNN
+# Đào tạo CNN, MLP(NN) và RNN
 plt.plot(range(1, 51), cnn_history.history['accuracy'], label="CNN đào tạo", marker='o')
 plt.plot(range(1, 51), train_accuracies, label="NN đào tạo", marker='x')
 plt.plot(range(1, 51), RNN_history.history['accuracy'], label="RNN đào tạo", marker='^')
 
-# Kiểm tra CNN, MLP và RNN
+# Kiểm tra CNN, MLP(NN) và RNN
 plt.plot(range(1, 51), cnn_history.history['val_accuracy'], label="CNN kiểm tra", marker='s')
 plt.plot(range(1, 51), test_accuracies, label="NN kiểm tra", marker='D')
 plt.plot(range(1, 51), RNN_history.history['val_accuracy'], label="RNN kiểm tra", marker='p')
